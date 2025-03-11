@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>website</title>
+    <title>Website</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <style>
+        /* Existing styles */
         body {
             margin: 0;
             background: #fff0f5;
@@ -64,16 +65,46 @@
             z-index: 3;
             line-height: 1.6;
             cursor: default;
+            
+            text-align: left;
+            font-size: 16px;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+
+        .letter h2 {
+            color: #FF6B6B;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .letter p {
+            margin-bottom: 15px;
+        }
+
+        .letter ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .letter li {
+            margin-bottom: 5px;
         }
 
         .ascii-art {
             position: fixed;
             white-space: pre;
-            font-size: 6px;
-            color: rgba(255, 215, 0, 0.4);
+            /* Enlarge font size for visibility */
+            font-size: 8px;
+            color: rgba(255, 215, 0, 0.6);
             opacity: 0;
             pointer-events: none;
             z-index: 1;
+            /* Center the ASCII art */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .birthday-text {
@@ -153,6 +184,10 @@
             .birthday-text {
                 font-size: 1.5em;
             }
+            
+            .ascii-art {
+                font-size: 6px;
+            }
         }
     </style>
 </head>
@@ -164,8 +199,7 @@
     </div>
 
     <div class="letter">
-        <button class="close-btn" onclick="closeLetter()" 
-                aria-label="Close letter" tabindex="0">Close</button>
+        <button class="close-btn" onclick="closeLetter()" aria-label="Close letter" tabindex="0">Close</button>
         <h2><span class="surprise-text">SURPRISE!</span> Nauwat napd ka heheheh.</h2>
         <p>Dear Lydee, I hope you enjoyed your day, or gahapon. (depende when will you read this xP). But I was scrolling on Facebook and it notified me of your 18th birthday two years ago. It was heart warming to see it again, to see you on your special day. Smiling. I've come to realized that time has flew very fast, from two years and in my head I thought it was months ago.</p>
         <p>We rarely see each other, and I just wanted to greet you a happy birthday virtually :)</p>
@@ -179,17 +213,17 @@
     </div>
 
     <pre class="ascii-art">
-      ___                       ___           ___           ___     
-     /\__\                     /\  \         /\  \         /\  \    
-    /:/  /                    /::\  \       /::\  \       /::\  \   
-   /:/  /                    /:/\:\  \     /:/\:\  \     /:/\:\  \  
-  /:/  /       ___          /:/  \:\__\   /::\~\:\  \   /::\~\:\  \ 
- /:/__/       /\__\        /:/__/ \:|__| /:/\:\ \:\__\ /:/\:\ \:\__\
- \:\  \      /:/  /        \:\  \ /:/  / \:\~\:\ \/__/ \:\~\:\ \/__/
-  \:\  \    /:/__/          \:\  /:/  /   \:\ \:\__\    \:\ \:\__\  
-   \:\  \   \:\  \           \:\/:/  /     \:\ \/__/     \:\ \/__/  
-    \:\__\   \:\__\           \::/  /       \:\__\        \:\__\    
-     \/__/    \/__/            \/__/         \/__/         \/__/    
+      ___       ___           ___           ___           ___     
+     /\__\     |\__\         /\  \         /\  \         /\  \    
+    /:/  /     |:|  |       /::\  \       /::\  \       /::\  \   
+   /:/  /      |:|  |      /:/\:\  \     /:/\:\  \     /:/\:\  \  
+  /:/  /       |:|__|__   /:/  \:\__\   /::\~\:\  \   /::\~\:\  \ 
+ /:/__/        /::::\__\ /:/__/ \:|__| /:/\:\ \:\__\ /:/\:\ \:\__\
+ \:\  \       /:/~~/~    \:\  \ /:/  / \:\~\:\ \/__/ \:\~\:\ \/__/
+  \:\  \     /:/  /       \:\  /:/  /   \:\ \:\__\    \:\ \:\__\  
+   \:\  \    \/__/         \:\/:/  /     \:\ \/__/     \:\ \/__/  
+    \:\__\                  \::/__/       \:\__\        \:\__\    
+     \/__/                   ~~            \/__/         \/__/    
     </pre>
 
     <div class="birthday-text">Happy Birthday Lydee!</div>
@@ -199,7 +233,7 @@
         let animation;
 
         function openEnvelope() {
-            if(isOpen) return;
+            if (isOpen) return;
             isOpen = true;
             
             document.querySelector('.click-indicator').style.display = 'none';
@@ -228,9 +262,10 @@
                 easing: 'easeOutElastic'
             });
 
+            // Adjusting animation for the new ASCII art
             animation = anime({
                 targets: '.ascii-art',
-                opacity: 0.4,
+                opacity: 0.6,
                 translateY: () => anime.random(-20, 20),
                 translateX: () => anime.random(-20, 20),
                 rotate: () => anime.random(-5, 5),
@@ -241,13 +276,13 @@
             });
 
             const starCount = window.innerWidth < 600 ? 15 : 25;
-            for(let i = 0; i < starCount; i++) {
+            for (let i = 0; i < starCount; i++) {
                 createStar();
             }
         }
 
         function closeLetter() {
-            if(!isOpen) return;
+            if (!isOpen) return;
             isOpen = false;
             
             anime({
@@ -270,7 +305,7 @@
                 duration: 500
             });
 
-            if(animation) animation.pause();
+            if (animation) animation.pause();
             document.querySelectorAll('.star').forEach(star => star.remove());
         }
 
