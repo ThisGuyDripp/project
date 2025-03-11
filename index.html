@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background: #fff0f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            transition: transform 0.5s;
+            z-index: 2;
+        }
+
+        @media (hover: hover) {
+            .envelope:hover {
+                transform: scale(1.1);
+            }
+        }
+
+        .envelope-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #FFD700;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+        }
+
+        .envelope-lid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #FFA500;
+            clip-path: polygon(0 0, 100% 0, 50% 15%);
+            transform-origin: top;
+            transition: transform 0.5s;
+        }
+
+        .letter {
+            position: absolute;
+            background: white;
+            padding: 40px 30px 60px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(100%);
+            display: none;
+            z-index: 3;
+            line-height: 1.6;
+            cursor: default;
+        }
+
+        .ascii-art {
+            position: fixed;
+            white-space: pre;
+            font-size: 6px;
+            color: rgba(255, 215, 0, 0.4);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .birthday-text {
+            position: fixed;
+            font-size: 2em;
+            color: #FF6B6B;
+            left: -100%;
+            white-space: nowrap;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            top: 10%;
+            z-index: 2;
+        }
+
+        .star {
+            position: absolute;
+            color: #FFD700;
+        }
+
+        .highlight {
+            color: #FF6B6B;
+            font-weight: bold;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #FF6B6B;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            z-index: 4;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .click-indicator {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FF6B6B;
+            font-size: 1.2em;
+            animation: pulse 2s infinite;
+            z-index: 1;
+        }
+
+        .surprise-text {
+            animation: pulsate 1s infinite;
+            display: inline-block;
+            color: #FF6B6B;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.2; transform: translateX(-50%) scale(0.95); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
+            100% { opacity: 0.2; transform: translateX(-50%) scale(0.95); }
+        }
+
+        @keyframes pulsate {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .letter {
+                width: 90%;
+                padding: 30px 20px 50px;
+            }
+            
+            .birthday-text {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="envelope" onclick="openEnvelope()">
+        <div class="envelope-front"></div>
+        <div class="envelope-lid"></div>
+        <div class="click-indicator">Click me!</div>
+    </div>
+
+    <div class="letter">
+        <button class="close-btn" onclick="closeLetter()" 
+                aria-label="Close letter" tabindex="0">Close</button>
+        <h2><span class="surprise-text">SURPRISE!</span> Nauwat napd ka heheheh.</h2>
+        <p>Dear Lydee, I hope you enjoyed your day, or gahapon. (depende when will you read this xP). But I was scrolling on Facebook and it notified me of your 18th birthday two years ago. It was heart warming to see it again, to see you on your special day. Smiling. I've come to realized that time has flew very fast, from two years and in my head I thought it was months ago.</p>
+        <p>We rarely see each other, and I just wanted to greet you a happy birthday virtually :)</p>
+        <p>May your special day include:</p>
+        <ul>
+            <li>Code that compiles on first try</li>
+            <li>Coffee that never goes cold ☕</li>
+        </ul>
+        <p>I hope you're doing okay. I worry sometimes but who am I kidding. I wish that everything works out for you, and I pray that it will be.</p>
+        <p>Happy Birthday Lydee.</p>
+    </div>
+
+    <pre class="ascii-art">
+      ___                       ___           ___           ___     
+     /\__\                     /\  \         /\  \         /\  \    
+    /:/  /                    /::\  \       /::\  \       /::\  \   
+   /:/  /                    /:/\:\  \     /:/\:\  \     /:/\:\  \  
+  /:/  /       ___          /:/  \:\__\   /::\~\:\  \   /::\~\:\  \ 
+ /:/__/       /\__\        /:/__/ \:|__| /:/\:\ \:\__\ /:/\:\ \:\__\
+ \:\  \      /:/  /        \:\  \ /:/  / \:\~\:\ \/__/ \:\~\:\ \/__/
+  \:\  \    /:/__/          \:\  /:/  /   \:\ \:\__\    \:\ \:\__\  
+   \:\  \   \:\  \           \:\/:/  /     \:\ \/__/     \:\ \/__/  
+    \:\__\   \:\__\           \::/  /       \:\__\        \:\__\    
+     \/__/    \/__/            \/__/         \/__/         \/__/    
+    </pre>
+
+    <div class="birthday-text">Happy Birthday Lydee!</div>
+
+    <script>
+        let isOpen = false;
+        let animation;
+
+        function openEnvelope() {
+            if(isOpen) return;
+            isOpen = true;
+            
+            document.querySelector('.click-indicator').style.display = 'none';
+
+            anime({
+                targets: '.envelope-lid',
+                rotateX: -180,
+                duration: 1500,
+                easing: 'easeInOutQuad'
+            });
+
+            anime({
+                targets: '.letter',
+                opacity: 1,
+                translateY: 0,
+                duration: 2000,
+                easing: 'easeOutElastic',
+                begin: () => document.querySelector('.letter').style.display = 'block'
+            });
+
+            anime({
+                targets: '.birthday-text',
+                left: '50%',
+                translateX: '-50%',
+                duration: 2500,
+                easing: 'easeOutElastic'
+            });
+
+            animation = anime({
+                targets: '.ascii-art',
+                opacity: 0.4,
+                translateY: () => anime.random(-20, 20),
+                translateX: () => anime.random(-20, 20),
+                rotate: () => anime.random(-5, 5),
+                duration: 4000,
+                delay: anime.stagger(150),
+                loop: true,
+                easing: 'easeInOutQuad'
+            });
+
+            const starCount = window.innerWidth < 600 ? 15 : 25;
+            for(let i = 0; i < starCount; i++) {
+                createStar();
+            }
+        }
+
+        function closeLetter() {
+            if(!isOpen) return;
+            isOpen = false;
+            
+            anime({
+                targets: ['.envelope-lid', '.letter', '.birthday-text'],
+                rotateX: [180, 0],
+                opacity: 0,
+                translateY: '100%',
+                left: '-100%',
+                duration: 1500,
+                easing: 'easeInOutQuad',
+                complete: () => {
+                    document.querySelector('.letter').style.display = 'none';
+                    document.querySelector('.click-indicator').style.display = 'block';
+                }
+            });
+
+            anime({
+                targets: '.ascii-art',
+                opacity: 0,
+                duration: 500
+            });
+
+            if(animation) animation.pause();
+            document.querySelectorAll('.star').forEach(star => star.remove());
+        }
+
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.innerHTML = '★';
+            star.style.position = 'absolute';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.color = '#FFD700';
+            star.style.fontSize = Math.random() * 20 + 15 + 'px';
+            star.style.opacity = 0;
+            document.body.appendChild(star);
+
+            anime({
+                targets: star,
+                opacity: [0, 1],
+                translateY: [-100, anime.random(-50, 200)],
+                translateX: anime.random(-50, 50),
+                scale: [0.3, 1],
+                duration: 3000,
+                easing: 'easeOutExpo',
+                complete: () => star.remove()
+            });
+        }
+    </script>
+</body>
+</html>
