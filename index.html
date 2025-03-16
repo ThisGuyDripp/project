@@ -11,42 +11,45 @@
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/STLLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/STLLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+
     <script>
-        // Set up the scene, camera, and renderer
+        // Scene setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Add a light
-        const light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(5, 5, 5).normalize();
+        // Orbit controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // Lighting
+        const light = new THREE.AmbientLight(0xffffff, 1);
         scene.add(light);
 
-        // Load the STL file
+        // Load STL model
         const loader = new THREE.STLLoader();
-        loader.load('cgee\untitled.stl', function (geometry) {
-            const material = new THREE.MeshPhongMaterial({ color: 0x0055ff });
+        loader.load('https://thisguydripp.github.io/project/untitled.stl', function (geometry) {
+            const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
             const mesh = new THREE.Mesh(geometry, material);
             scene.add(mesh);
-            mesh.position.set(0, 0, 0);
-            mesh.rotation.x = -Math.PI / 2; // Rotate if necessary
         });
 
-        // Set camera position
+        // Camera position
         camera.position.z = 5;
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
+            controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
             renderer.render(scene, camera);
         }
         animate();
 
         // Handle window resize
-        window.addEventListener('resize', function () {
+        window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
