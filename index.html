@@ -26,8 +26,12 @@
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
         // Lighting
-        const light = new THREE.AmbientLight(0xffffff, 1);
-        scene.add(light);
+        const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5).normalize();
+        scene.add(directionalLight);
 
         // Load STL model
         const loader = new THREE.STLLoader();
@@ -35,6 +39,8 @@
             const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
             const mesh = new THREE.Mesh(geometry, material);
             scene.add(mesh);
+        }, undefined, function (error) {
+            console.error('An error occurred while loading the STL file:', error);
         });
 
         // Camera position
