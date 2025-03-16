@@ -31,7 +31,7 @@
 
         // Load STL model
         const loader = new THREE.STLLoader();
-        loader.load('untitled.stl', function (geometry) {
+        loader.load('https://thisguydripp.github.io/project/untitled', function (geometry) {
             const material = new THREE.MeshStandardMaterial({ color: 0x555555 });
             const mesh = new THREE.Mesh(geometry, material);
             scene.add(mesh);
