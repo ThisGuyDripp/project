@@ -3,334 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <style>
-        /* Existing styles */
-        body {
-            margin: 0;
-            background: #fff0f5;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Courier New', monospace;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .envelope {
-            position: relative;
-            width: 300px;
-            height: 200px;
-            transition: transform 0.5s;
-            z-index: 2;
-        }
-
-        @media (hover: hover) {
-            .envelope:hover {
-                transform: scale(1.1);
-            }
-        }
-
-        .envelope-front {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: #FFD700;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
-        }
-
-        .envelope-lid {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: #FFA500;
-            clip-path: polygon(0 0, 100% 0, 50% 15%);
-            transform-origin: top;
-            transition: transform 0.5s;
-        }
-
-        .letter {
-            position: absolute;
-            background: white;
-            padding: 40px 30px 60px;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            opacity: 0;
-            transform: translateY(100%);
-            display: none;
-            z-index: 3;
-            line-height: 1.6;
-            cursor: default;
-            
-            text-align: left;
-            font-size: 16px;
-            color: #333;
-            font-family: 'Courier New', monospace;
-        }
-
-        .letter h2 {
-            color: #FF6B6B;
-            margin-bottom: 20px;
-            font-size: 24px;
-            text-align: center;
-        }
-
-        .letter p {
-            margin-bottom: 15px;
-        }
-
-        .letter ul {
-            padding-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        .letter li {
-            margin-bottom: 5px;
-        }
-
-        .ascii-art {
-            position: fixed;
-            white-space: pre;
-            /* Enlarge font size for visibility */
-            font-size: 8px;
-            color: rgba(255, 215, 0, 0.6);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 1;
-            /* Center the ASCII art */
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .birthday-text {
-            position: fixed;
-            font-size: 2em;
-            color: #FF6B6B;
-            left: -100%;
-            white-space: nowrap;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            top: 10%;
-            z-index: 2;
-        }
-
-        .star {
-            position: absolute;
-            color: #FFD700;
-        }
-
-        .highlight {
-            color: #FF6B6B;
-            font-weight: bold;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #FF6B6B;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            z-index: 4;
-        }
-
-        .close-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .click-indicator {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #FF6B6B;
-            font-size: 1.2em;
-            animation: pulse 2s infinite;
-            z-index: 1;
-        }
-
-        .surprise-text {
-            animation: pulsate 1s infinite;
-            display: inline-block;
-            color: #FF6B6B;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.2; transform: translateX(-50%) scale(0.95); }
-            50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
-            100% { opacity: 0.2; transform: translateX(-50%) scale(0.95); }
-        }
-
-        @keyframes pulsate {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @media (max-width: 600px) {
-            .letter {
-                width: 90%;
-                padding: 30px 20px 50px;
-            }
-            
-            .birthday-text {
-                font-size: 1.5em;
-            }
-            
-            .ascii-art {
-                font-size: 6px;
-            }
-        }
-    </style>
+    <title>Miller Indices Calculator</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="envelope" onclick="openEnvelope()">
-        <div class="envelope-front"></div>
-        <div class="envelope-lid"></div>
-        <div class="click-indicator">Click me!</div>
+    <div class="container">
+        <div class="control-panel">
+            <h1>Miller Indices Calculator</h1>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="h">h index</label>
+                    <input type="number" 
+                           id="h" 
+                           placeholder="Enter h" 
+                           step="1" 
+                           min="-99"
+                           max="99"
+                           aria-label="h index"
+                           title="Enter integer value for h index"
+                           data-tooltip="Values can be positive, negative, or zero">
+                    <span class="validation-message" id="h-validation"></span>
+                </div>
+                <div class="input-field">
+                    <label for="k">k index</label>
+                    <input type="number" 
+                           id="k" 
+                           placeholder="Enter k" 
+                           step="1"
+                           min="-99"
+                           max="99" 
+                           aria-label="k index"
+                           title="Enter integer value for k index"
+                           data-tooltip="Values can be positive, negative, or zero">
+                    <span class="validation-message" id="k-validation"></span>
+                </div>
+                <div class="input-field">
+                    <label for="l">l index</label>
+                    <input type="number" 
+                           id="l" 
+                           placeholder="Enter l" 
+                           step="1"
+                           min="-99"
+                           max="99" 
+                           aria-label="l index"
+                           title="Enter integer value for l index"
+                           data-tooltip="Values can be positive, negative, or zero">
+                    <span class="validation-message" id="l-validation"></span>
+                </div>
+                <div class="button-group">
+                    <button onclick="handleGenerate()" 
+                            class="primary-btn" 
+                            accesskey="g"
+                            title="Generate (Alt+G)">
+                        Generate
+                    </button>
+                    <button onclick="handleReset()" 
+                            class="secondary-btn" 
+                            accesskey="r"
+                            title="Reset (Alt+R)">
+                        Reset
+                    </button>
+                </div>
+            </div>
+            <div id="error" class="error-message" role="alert"></div>
+        </div>
+        
+        <div class="visualization-container">
+            <div id="loading" class="loading-overlay">
+                <div class="loader"></div>
+                <span>Loading visualization...</span>
+            </div>
+            <div id="scene-container" 
+                 aria-label="3D visualization of Miller indices"
+                 role="img">
+            </div>
+        </div>
+        
+        <div class="solution-section" id="solution">
+            <h2>Solution Steps</h2>
+            <div id="steps"></div>
+        </div>
     </div>
 
-    <div class="letter">
-        <button class="close-btn" onclick="closeLetter()" aria-label="Close letter" tabindex="0">Close</button>
-        <h2><span class="surprise-text">SURPRISE!</span> Nauwat napd ka heheheh.</h2>
-        <p>Dear Lydee, I hope you enjoyed your day, or gahapon. (depende when will you read this xP). But I was scrolling on Facebook and it notified me of your 18th birthday two years ago. It was heart warming to see it again, to see you on your special day. Smiling. I've come to realized that time has flew very fast, from two years and in my head I thought it was months ago.</p>
-        <p>We rarely see each other, and I just wanted to greet you a happy birthday virtually :)</p>
-        <p>May your special day include:</p>
-        <ul>
-            <li>Code that compiles on first try</li>
-            <li>Coffee that never goes cold ☕</li>
-        </ul>
-        <p>I hope you're doing okay. I worry sometimes but who am I kidding. I wish that everything works out for you, and I pray that it will be.</p>
-        <p>Happy Birthday Lydee.</p>
-    </div>
+    <!-- Loading indicator -->
+    <div id="script-loading" class="script-loading">Loading resources...</div>
 
-    <pre class="ascii-art">
-      ___       ___           ___           ___           ___     
-     /\__\     |\__\         /\  \         /\  \         /\  \    
-    /:/  /     |:|  |       /::\  \       /::\  \       /::\  \   
-   /:/  /      |:|  |      /:/\:\  \     /:/\:\  \     /:/\:\  \  
-  /:/  /       |:|__|__   /:/  \:\__\   /::\~\:\  \   /::\~\:\  \ 
- /:/__/        /::::\__\ /:/__/ \:|__| /:/\:\ \:\__\ /:/\:\ \:\__\
- \:\  \       /:/~~/~    \:\  \ /:/  / \:\~\:\ \/__/ \:\~\:\ \/__/
-  \:\  \     /:/  /       \:\  /:/  /   \:\ \:\__\    \:\ \:\__\  
-   \:\  \    \/__/         \:\/:/  /     \:\ \/__/     \:\ \/__/  
-    \:\__\                  \::/__/       \:\__\        \:\__\    
-     \/__/                   ~~            \/__/         \/__/    
-    </pre>
-
-    <div class="birthday-text">Happy Birthday Lydee!</div>
-
-    <script>
-        let isOpen = false;
-        let animation;
-
-        function openEnvelope() {
-            if (isOpen) return;
-            isOpen = true;
-            
-            document.querySelector('.click-indicator').style.display = 'none';
-
-            anime({
-                targets: '.envelope-lid',
-                rotateX: -180,
-                duration: 1500,
-                easing: 'easeInOutQuad'
-            });
-
-            anime({
-                targets: '.letter',
-                opacity: 1,
-                translateY: 0,
-                duration: 2000,
-                easing: 'easeOutElastic',
-                begin: () => document.querySelector('.letter').style.display = 'block'
-            });
-
-            anime({
-                targets: '.birthday-text',
-                left: '50%',
-                translateX: '-50%',
-                duration: 2500,
-                easing: 'easeOutElastic'
-            });
-
-            // Adjusting animation for the new ASCII art
-            animation = anime({
-                targets: '.ascii-art',
-                opacity: 0.6,
-                translateY: () => anime.random(-20, 20),
-                translateX: () => anime.random(-20, 20),
-                rotate: () => anime.random(-5, 5),
-                duration: 4000,
-                delay: anime.stagger(150),
-                loop: true,
-                easing: 'easeInOutQuad'
-            });
-
-            const starCount = window.innerWidth < 600 ? 15 : 25;
-            for (let i = 0; i < starCount; i++) {
-                createStar();
+    <!-- Three.js ES Modules -->
+    <script async src="https://unpkg.com/es-module-shims/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
             }
         }
+    </script>
 
-        function closeLetter() {
-            if (!isOpen) return;
-            isOpen = false;
-            
-            anime({
-                targets: ['.envelope-lid', '.letter', '.birthday-text'],
-                rotateX: [180, 0],
-                opacity: 0,
-                translateY: '100%',
-                left: '-100%',
-                duration: 1500,
-                easing: 'easeInOutQuad',
-                complete: () => {
-                    document.querySelector('.letter').style.display = 'none';
-                    document.querySelector('.click-indicator').style.display = 'block';
-                }
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        
+        // Make THREE and OrbitControls globally available
+        window.THREE = THREE;
+        window.OrbitControls = OrbitControls;
+
+        // Signal that Three.js is loaded
+        window.threeLoaded = true;
+        window.dispatchEvent(new Event('threeLoaded'));
+    </script>
+
+    <!-- KaTeX -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Application Scripts -->
+    <script defer src="config.js"></script>
+    <script defer src="utils.js"></script>
+    <script defer src="InterceptCalculator.js"></script>
+    <script defer src="AxisSystem.js"></script>
+    <script defer src="MillerVisualizer.js"></script>
+    <script defer src="main.js"></script>
+    <script src="https://embed.github.com/view/3d/ThisGuyDripp/src/<ref>/<ubtitled.stl></script>
+
+    <!-- Initialization -->
+    <script>
+        // Wait for all resources to load
+        window.addEventListener('DOMContentLoaded', function() {
+            // Check if Three.js is loaded
+            if (!window.threeLoaded) {
+                window.addEventListener('threeLoaded', initializeApp);
+            } else {
+                initializeApp();
+            }
+
+            // Hide loading indicator when everything is loaded
+            window.addEventListener('load', function() {
+                document.getElementById('script-loading').style.display = 'none';
             });
+        });
 
-            anime({
-                targets: '.ascii-art',
-                opacity: 0,
-                duration: 500
-            });
+        // Error handling
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Script error:', { msg, url, lineNo, columnNo, error });
+            document.getElementById('error').textContent = 'Error loading application. Please refresh the page.';
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('script-loading').style.display = 'none';
+            return false;
+        };
 
-            if (animation) animation.pause();
-            document.querySelectorAll('.star').forEach(star => star.remove());
-        }
-
-        function createStar() {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.innerHTML = '★';
-            star.style.position = 'absolute';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.color = '#FFD700';
-            star.style.fontSize = Math.random() * 20 + 15 + 'px';
-            star.style.opacity = 0;
-            document.body.appendChild(star);
-
-            anime({
-                targets: star,
-                opacity: [0, 1],
-                translateY: [-100, anime.random(-50, 200)],
-                translateX: anime.random(-50, 50),
-                scale: [0.3, 1],
-                duration: 3000,
-                easing: 'easeOutExpo',
-                complete: () => star.remove()
-            });
+        // Initialize application
+        function initializeApp() {
+            try {
+                console.log('Initializing application...');
+                // Wait for a brief moment to ensure all scripts are executed
+                setTimeout(() => {
+                    if (!window.app && window.MillerIndicesApp) {
+                        window.app = new window.MillerIndicesApp();
+                        console.log('Application initialized successfully');
+                    }
+                }, 100);
+            } catch (error) {
+                console.error('Initialization error:', error);
+                document.getElementById('error').textContent = 'Failed to initialize application: ' + error.message;
+                document.getElementById('error').style.display = 'block';
+            }
         }
     </script>
 </body>
