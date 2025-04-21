@@ -1,83 +1,133 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>3D Model Viewer</title>
+    <title>Crystal Symmetry Viewer</title>
     <style>
-        body { margin: 0; }
-        canvas { display: block; }
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        #header {
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        #viewerContainer {
+            flex: 1;
+            position: relative;
+        }
+        
+        canvas {
+            display: block;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
     </style>
 </head>
 <body>
+    <div id="header">
+        <h1>External Symmetry of Crystals</h1>
+        <button onclick="loadModel()">Cube External Symmetry</button>
+    </div>
+    
+    <div id="viewerContainer"></div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
 
     <script>
-        // Set up scene, camera, and renderer
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        let scene, camera, renderer, controls;
 
-        // Add lights
-        const ambientLight = new THREE.AmbientLight(0x404040);
-        scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(0, 1, 0);
-        scene.add(directionalLight);
-
-        // Add controls
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-
-        // Load the STL file
-        const loader = new THREE.STLLoader();
-        loader.load(
-            'https://raw.githubusercontent.com/ThisGuyDripp/project/main/untitled.blend-1 proj.stl',
-            function (geometry) {
-                const material = new THREE.MeshPhongMaterial({ 
-                    color: 0x808080,
-                    specular: 0x111111,
-                    shininess: 200 
-                });
-                const mesh = new THREE.Mesh(geometry, material);
-                
-                // Center the model
-                geometry.center();
-                
-                // Add the model to the scene
-                scene.add(mesh);
-
-                // Position camera
-                const box = new THREE.Box3().setFromObject(mesh);
-                const size = box.getSize(new THREE.Vector3()).length();
-                camera.position.set(0, 0, size * 2);
-                camera.lookAt(0, 0, 0);
-            },
-            function (xhr) {
-                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-            },
-            function (error) {
-                console.error('An error occurred while loading the STL file:', error);
+        function loadModel() {
+            // Remove existing canvas if any
+            const container = document.getElementById('viewerContainer');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
             }
-        );
 
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        }
-        animate();
+            // Initialize Three.js components
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
 
-        // Handle window resizing
-        window.addEventListener('resize', onWindowResize, false);
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            // Add lighting
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(0, 1, 0);
+            scene.add(directionalLight);
+
+            // Add controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Load STL model
+            const loader = new THREE.STLLoader();
+            loader.load(
+                'https://raw.githubusercontent.com/ThisGuyDripp/project/main/untitled.blend-1%20proj.stl',
+                function (geometry) {
+                    const material = new THREE.MeshPhongMaterial({ 
+                        color: 0x808080,
+                        specular: 0x111111,
+                        shininess: 200 
+                    });
+                    
+                    const mesh = new THREE.Mesh(geometry, material);
+                    geometry.center();
+                    scene.add(mesh);
+
+                    // Adjust camera position
+                    const box = new THREE.Box3().setFromObject(mesh);
+                    const size = box.getSize(new THREE.Vector3()).length();
+                    camera.position.set(0, 0, size * 2);
+                    camera.lookAt(0, 0, 0);
+                },
+                function (xhr) {
+                    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                },
+                function (error) {
+                    console.error('Error loading model:', error);
+                }
+            );
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
         }
     </script>
 </body>
